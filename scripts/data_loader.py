@@ -1,53 +1,38 @@
 import pandas as pd
 import os
-
-# CONFIGURACIÓN DE RUTAS
-
-# ruta absoluta del script actual
+ 
+# ruta absoluta de la carpeta donde está el script (.../scripts/)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# ruta del archivo de datos
-DATA_PATH = os.path.join(SCRIPT_DIR, "..", "data", "cat_origen_2012-jul2025.txt")
-
-
-# FUNCIÓN PARA CARGAR DATOS
-
-def cargar_catalogo_sismico(path):
-    print(f"\nCargando catálogo sísmico desde:\n{path}\n")
+ 
+# construir la ruta del archivo csv de data
+DATA_PATH = os.path.join(SCRIPT_DIR, "..", "data", "games.csv")
+ 
+# creacion de funcion
+def cargar_datos(path):
+    print(f"Cargando datos desde {path}...")
+   
     try:
-        # leer el archivo .txt separado por comas
-        df = pd.read_csv(path, sep=",", comment="#")
-        print(" Datos cargados correctamente.")
-        print(f"Filas cargadas: {len(df)}\n")
+        df = pd.read_csv(path)
+        print("Datos han sido cargados!!!")
         return df
-
     except FileNotFoundError:
-        print(f" Error: no se encontró el archivo en {path}")
-        print("Asegúrate de que el archivo esté en la carpeta 'data'.")
+        print(f"Error: no se encontró el archivo en {path}")
+        print("Asegurate de tener el archivo en la carpeta 'data'.")
         return None
-
-    except pd.errors.ParserError as e:
-        print(f" Error al leer el archivo: {e}")
-        print("Verifica si el separador correcto es ',' o ';' o '\\t'.")
-        return None
-
     except Exception as e:
-        print(f" Ocurrió un error inesperado: {e}")
+        print(f"Ocurrió un error inesperado {e}")
         return None
-
-
-# BLOQUE PRINCIPAL
-
+    # ¿este archivo se está ejecutando directamente por el usuario o está siendo importado por otro script?
 if __name__ == "__main__":
+    # indica dónde está el script actual
     print(f"Ejecutando script desde: {os.path.abspath(__file__)}")
-
-    # cargar el catálogo sísmico
-    catalogo = cargar_catalogo_sismico(DATA_PATH)
-
-    # mostrar información general
-    if catalogo is not None:
-        print("\n--- Primeras 5 filas del catálogo ---")
-        print(catalogo.head())
-
-        print("\n--- Información del DataFrame ---")
-        catalogo.info()
+   
+    # llama a la función de arriba para cargar el csv
+    dataframe_juegos = cargar_datos(DATA_PATH)
+   
+    if dataframe_juegos is not None:
+        print("\n---Primeras 5 filas---")
+        print(dataframe_juegos.head())
+       
+        print("\n---Información del DataFrame---")
+        dataframe_juegos.info()
